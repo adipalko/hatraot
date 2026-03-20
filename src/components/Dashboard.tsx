@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Activity, MapPin, Clock, ShieldAlert, RefreshCw } from "lucide-react";
+import {
+  Activity,
+  MapPin,
+  Clock,
+  ShieldAlert,
+  RefreshCw,
+  Rocket,
+} from "lucide-react";
 import type { DashboardPayload } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
 import MetricCard from "./MetricCard";
@@ -80,6 +87,9 @@ export default function Dashboard({ initial }: Props) {
     dateFrom ||
     dateTo;
 
+  const rocketsCount =
+    data.byCategory.find((c) => c.category === 1)?.count ?? 0;
+
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* Header */}
@@ -151,19 +161,31 @@ export default function Dashboard({ initial }: Props) {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div
+        className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${
+          selectedCities.length === 0 ? "xl:grid-cols-4" : "xl:grid-cols-3"
+        }`}
+      >
         <MetricCard
-          label="Total Shelter Alerts"
+          label="Prepare / Stay Near Shelter"
           value={formatNumber(data.totalAlerts)}
           icon={Activity}
-          accentClass="text-accent-amber"
+          accentClass="text-sky-400"
         />
         <MetricCard
-          label="Most Targeted City"
-          value={data.topCity}
-          icon={MapPin}
+          label="Rockets & Missiles"
+          value={formatNumber(rocketsCount)}
+          icon={Rocket}
           accentClass="text-accent-red"
         />
+        {selectedCities.length === 0 && (
+          <MetricCard
+            label="Most Targeted City"
+            value={data.topCity}
+            icon={MapPin}
+            accentClass="text-amber-500"
+          />
+        )}
         <MetricCard
           label="Peak Alert Hour"
           value={data.peakHour}

@@ -60,7 +60,7 @@ export default function DailyTrendChart({ data }: Props) {
                 fontSize: 13,
               }}
               labelStyle={{ color: "#fafafa", fontWeight: 600 }}
-              labelFormatter={formatDateLabel}
+              labelFormatter={(label) => formatDateLabel(String(label))}
               itemStyle={{ color: "#f59e0b" }}
               formatter={(value: number) => [value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), "Alerts"]}
             />

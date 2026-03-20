@@ -80,8 +80,8 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
                 fontSize: 13,
               }}
               labelStyle={{ color: "#fafafa", fontWeight: 600 }}
-              formatter={(value: number) => [
-                formatNumber(value),
+              formatter={(value) => [
+                formatNumber(Number(value)),
                 "Avg. Shelter Alerts",
               ]}
             />

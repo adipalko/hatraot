@@ -99,7 +99,7 @@ export default function AlertsByHourChart({
             <Tooltip content={<CustomTooltip />} />
             <Legend
               wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
-              formatter={(value: string) => {
+              formatter={(value) => {
                 const cat = parseInt(value.replace("cat_", ""), 10);
                 return categoryLabel(cat);
               }}

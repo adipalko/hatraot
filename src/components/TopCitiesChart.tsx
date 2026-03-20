@@ -73,7 +73,7 @@ export default function TopCitiesChart({ data }: Props) {
                 direction: "rtl",
               }}
               itemStyle={{ color: "#f59e0b" }}
-              formatter={(value: number) => [value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), "Alerts"]}
+              formatter={(value) => [String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ","), "Alerts"]}
             />
             <Bar dataKey="count" radius={[0, 4, 4, 0]}>
               {data.map((_, i) => (

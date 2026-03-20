@@ -187,7 +187,7 @@ export function computePayload(
     const hm = hourCatMap.get(hour);
     if (hm) {
       for (const [cat, count] of hm) {
-        (bucket as Record<string, number>)[`cat_${cat}`] = count;
+        (bucket as unknown as Record<string, number>)[`cat_${cat}`] = count;
       }
     }
     return bucket;

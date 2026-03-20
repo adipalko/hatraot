@@ -14,13 +14,13 @@ interface Props {
   onChangeTo: (v: string) => void;
 }
 
-function toDate(s: string): Date | null {
-  if (!s) return null;
+function toDate(s: string): Date | undefined {
+  if (!s) return undefined;
   const [y, m, d] = s.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
 
-function toStr(d: Date | null): string {
+function toStr(d: Date | null | undefined): string {
   if (!d) return "";
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");

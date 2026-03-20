@@ -183,7 +183,7 @@ export default function Dashboard({ initial }: Props) {
 
       {/* Shelter Avg Chart */}
       <ShelterByHourChart
-        data={shelterWeekday ? data.shelterByHourWeekday : data.shelterByHour}
+        data={shelterWeekday ? data.shelterByShiftWeekday : data.shelterByShift}
         weekdayOnly={shelterWeekday}
         onToggle={setShelterWeekday}
       />

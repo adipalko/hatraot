@@ -10,16 +10,20 @@ import {
   CartesianGrid,
   Cell,
 } from "recharts";
-import type { ShelterHourBucket } from "@/lib/types";
+import type { ShelterShiftBucket } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
 
 interface Props {
-  data: ShelterHourBucket[];
+  data: ShelterShiftBucket[];
   weekdayOnly: boolean;
   onToggle: (v: boolean) => void;
 }
 
+const SHIFT_COLORS = ["#f59e0b", "#38bdf8", "#a78bfa", "#1e3a5f"];
+
 export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Props) {
+  if (!data || data.length === 0) return null;
+
   const peak = data.reduce(
     (max, b) => (b.avg > max ? b.avg : max),
     0
@@ -30,10 +34,10 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-card-foreground">
-            Avg. Shelter Alerts per Hour
+            Avg. Shelter Alerts per Shift
           </h3>
           <p className="text-xs text-muted-foreground">
-            Average daily &quot;Prepare / Stay Near Shelter&quot; alerts by hour of day
+            Average daily &quot;Prepare / Stay Near Shelter&quot; alerts by shift
           </p>
         </div>
         <label className="inline-flex cursor-pointer items-center gap-2 text-sm select-none">
@@ -63,7 +67,6 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
             <XAxis
               dataKey="label"
               tick={{ fontSize: 11 }}
-              interval={1}
               tickLine={false}
               axisLine={false}
             />
@@ -85,11 +88,12 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
                 "Avg. Shelter Alerts",
               ]}
             />
-            <Bar dataKey="avg" fill="#0c4a6e" radius={[4, 4, 0, 0]}>
-              {data.map((entry) => (
+            <Bar dataKey="avg" radius={[4, 4, 0, 0]}>
+              {data.map((entry, i) => (
                 <Cell
-                  key={entry.hour}
-                  fill={entry.avg === peak && peak > 0 ? "#38bdf8" : "#0c4a6e"}
+                  key={entry.shift}
+                  fill={entry.avg === peak && peak > 0 ? SHIFT_COLORS[i] : SHIFT_COLORS[i]}
+                  fillOpacity={entry.avg === peak && peak > 0 ? 1 : 0.65}
                 />
               ))}
             </Bar>

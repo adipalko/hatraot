@@ -5,8 +5,9 @@ import type {
   HourBucket,
   HourStackedBucket,
   ShelterHourBucket,
+  ShelterShiftBucket,
 } from "./types";
-import { categoryLabel } from "./types";
+import { categoryLabel, SHELTER_SHIFTS } from "./types";
 
 export type { Alert, CategoryBucket, DashboardPayload, HourBucket };
 export { categoryLabel };
@@ -257,6 +258,28 @@ export function computePayload(
     })
   );
 
+  const shelterByShift: ShelterShiftBucket[] = SHELTER_SHIFTS.map(
+    (s, idx) => {
+      const total = s.hours.reduce((sum, h) => sum + shelterHourTotals[h], 0);
+      return {
+        shift: idx,
+        label: s.label,
+        avg: Math.round((total / numDays) * 10) / 10,
+      };
+    }
+  );
+
+  const shelterByShiftWeekday: ShelterShiftBucket[] = SHELTER_SHIFTS.map(
+    (s, idx) => {
+      const total = s.hours.reduce((sum, h) => sum + shelterHourTotalsWd[h], 0);
+      return {
+        shift: idx,
+        label: s.label,
+        avg: Math.round((total / numWeekdays) * 10) / 10,
+      };
+    }
+  );
+
   const dates = alerts.map((a) => a.date);
   const dateMin = dates.length > 0 ? dates[dates.length - 1] : "";
   const dateMax = dates.length > 0 ? dates[0] : "";
@@ -273,6 +296,8 @@ export function computePayload(
     byCategory,
     shelterByHour,
     shelterByHourWeekday,
+    shelterByShift,
+    shelterByShiftWeekday,
     allCities,
     filteredCategories,
     dateMin,

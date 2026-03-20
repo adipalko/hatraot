@@ -40,6 +40,19 @@ export interface ShelterHourBucket {
   avg: number;
 }
 
+export interface ShelterShiftBucket {
+  shift: number;
+  label: string;
+  avg: number;
+}
+
+export const SHELTER_SHIFTS = [
+  { label: "Morning (06–08)", hours: [6, 7] },
+  { label: "Day (08–16)", hours: [8, 9, 10, 11, 12, 13, 14, 15] },
+  { label: "Evening (16–21)", hours: [16, 17, 18, 19, 20] },
+  { label: "Night (21–06)", hours: [21, 22, 23, 0, 1, 2, 3, 4, 5] },
+] as const;
+
 export interface DashboardPayload {
   totalAlerts: number;
   topCity: string;
@@ -52,6 +65,8 @@ export interface DashboardPayload {
   byCategory: CategoryBucket[];
   shelterByHour: ShelterHourBucket[];
   shelterByHourWeekday: ShelterHourBucket[];
+  shelterByShift: ShelterShiftBucket[];
+  shelterByShiftWeekday: ShelterShiftBucket[];
   allCities: string[];
   /** Category counts reflecting city + date filters (but not category filter) */
   filteredCategories: CategoryBucket[];

@@ -47,7 +47,7 @@ export default function DateRangeFilter({
       <DatePicker
         ref={fromRef}
         selected={toDate(from)}
-        onChange={(d) => onChangeFrom(toStr(d))}
+        onChange={(d: Date | null) => onChangeFrom(toStr(d))}
         selectsStart
         startDate={toDate(from)}
         endDate={toDate(to)}
@@ -63,7 +63,7 @@ export default function DateRangeFilter({
       <DatePicker
         ref={toRef}
         selected={toDate(to)}
-        onChange={(d) => onChangeTo(toStr(d))}
+        onChange={(d: Date | null) => onChangeTo(toStr(d))}
         selectsEnd
         startDate={toDate(from)}
         endDate={toDate(to)}

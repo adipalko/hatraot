@@ -154,6 +154,8 @@ export function computePayload(
   const hourCounts = new Array(24).fill(0);
   const cityMap = new Map<string, number>();
   const dayMap = new Map<string, number>();
+  /** Daily counts for category 14 only — used for the daily trend chart */
+  const shelterDayMap = new Map<string, number>();
   const catMap = new Map<number, number>();
 
   // hour -> category -> count
@@ -164,6 +166,12 @@ export function computePayload(
     hourCounts[h]++;
     cityMap.set(a.city, (cityMap.get(a.city) || 0) + 1);
     dayMap.set(a.date, (dayMap.get(a.date) || 0) + 1);
+    if (a.category === 14) {
+      shelterDayMap.set(
+        a.date,
+        (shelterDayMap.get(a.date) || 0) + 1
+      );
+    }
     catMap.set(a.category, (catMap.get(a.category) || 0) + 1);
 
     if (!hourCatMap.has(h)) hourCatMap.set(h, new Map());
@@ -212,7 +220,7 @@ export function computePayload(
 
   const filteredCategories = opts?.filteredCategories ?? byCategory;
 
-  const byDay = [...dayMap.entries()]
+  const byDay = [...shelterDayMap.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([date, count]) => ({ date, count }));
 

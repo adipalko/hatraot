@@ -23,16 +23,21 @@ function formatDateLabel(d: string) {
 export default function DailyTrendChart({ data }: Props) {
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-lg shadow-black/20">
-      <h3 className="mb-4 text-lg font-semibold text-card-foreground">
-        Daily Alert Trend
-      </h3>
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-card-foreground">
+          Daily shelter alert trend
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          Prepare / Stay Near Shelter only (category 14)
+        </p>
+      </div>
       <div className="h-72" style={{ minWidth: 0, minHeight: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -16 }}>
             <defs>
-              <linearGradient id="gradAmber" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+              <linearGradient id="gradShelterDaily" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.35} />
+                <stop offset="95%" stopColor="#38bdf8" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -61,15 +66,15 @@ export default function DailyTrendChart({ data }: Props) {
               }}
               labelStyle={{ color: "#fafafa", fontWeight: 600 }}
               labelFormatter={(label) => formatDateLabel(String(label))}
-              itemStyle={{ color: "#f59e0b" }}
-              formatter={(value) => [String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ","), "Alerts"]}
+              itemStyle={{ color: "#38bdf8" }}
+              formatter={(value) => [String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ","), "Shelter alerts"]}
             />
             <Area
               type="monotone"
               dataKey="count"
-              stroke="#f59e0b"
+              stroke="#38bdf8"
               strokeWidth={2}
-              fill="url(#gradAmber)"
+              fill="url(#gradShelterDaily)"
             />
           </AreaChart>
         </ResponsiveContainer>

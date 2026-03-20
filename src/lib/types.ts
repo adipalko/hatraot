@@ -63,6 +63,7 @@ export interface DashboardPayload {
   byHour: HourBucket[];
   byHourStacked: HourStackedBucket[];
   categoriesInData: number[];
+  /** Per-day counts for category 14 only (daily trend chart) */
   byDay: DayBucket[];
   byCategory: CategoryBucket[];
   shelterByHour: ShelterHourBucket[];

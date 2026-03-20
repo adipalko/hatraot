@@ -195,11 +195,7 @@ export function computePayload(
     return bucket;
   });
 
-  const topCities = [...cityMap.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([city, count]) => ({ city, count }));
-
+  // Ranks 2–11: omit the single busiest city so differences stay visible on the axis
   const allCities =
     opts?.allCities ??
     [...cityMap.keys()].sort(
@@ -313,13 +309,11 @@ export function computePayload(
 
   return {
     totalAlerts: catMap.get(14) ?? 0,
-    topCity: topCities.length > 0 ? topCities[0].city : "—",
     peakHour: `${String(peakIdx).padStart(2, "0")}:00`,
     byHour,
     byHourStacked,
     categoriesInData,
     byDay,
-    topCities,
     byCategory,
     shelterByHour,
     shelterByHourWeekday,

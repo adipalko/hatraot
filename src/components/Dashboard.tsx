@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Activity,
-  MapPin,
   Clock,
   ShieldAlert,
   RefreshCw,
@@ -13,7 +12,6 @@ import type { DashboardPayload } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
 import MetricCard from "./MetricCard";
 import DailyTrendChart from "./DailyTrendChart";
-import TopCitiesChart from "./TopCitiesChart";
 import CityFilter from "./CityFilter";
 import CategoryFilter from "./CategoryFilter";
 import DateRangeFilter from "./DateRangeFilter";
@@ -161,11 +159,7 @@ export default function Dashboard({ initial }: Props) {
       </div>
 
       {/* Metrics Row */}
-      <div
-        className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${
-          selectedCities.length === 0 ? "xl:grid-cols-4" : "xl:grid-cols-3"
-        }`}
-      >
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
           label="Prepare / Stay Near Shelter"
           value={formatNumber(data.totalAlerts)}
@@ -178,14 +172,6 @@ export default function Dashboard({ initial }: Props) {
           icon={Rocket}
           accentClass="text-accent-red"
         />
-        {selectedCities.length === 0 && (
-          <MetricCard
-            label="Most Targeted City"
-            value={data.topCity}
-            icon={MapPin}
-            accentClass="text-amber-500"
-          />
-        )}
         <MetricCard
           label="Peak Alert Hour"
           value={data.peakHour}
@@ -207,13 +193,7 @@ export default function Dashboard({ initial }: Props) {
         <ShelterDailyTrendChart data={data.shelterDailyShift} />
       </div>
 
-      {/* Charts Row 2 + Table */}
-      <div className={`grid grid-cols-1 gap-6 ${selectedCities.length === 0 ? "lg:grid-cols-2" : ""}`}>
-        {selectedCities.length === 0 && (
-          <TopCitiesChart data={data.topCities} />
-        )}
-        <AlertsTable alerts={data.recentAlerts} />
-      </div>
+      <AlertsTable alerts={data.recentAlerts} />
     </div>
   );
 }

@@ -18,11 +18,6 @@ export interface HourStackedBucket {
   [catKey: `cat_${number}`]: number;
 }
 
-export interface CityBucket {
-  city: string;
-  count: number;
-}
-
 export interface DayBucket {
   date: string;
   count: number;
@@ -64,13 +59,11 @@ export interface DailyShiftBucket {
 export interface DashboardPayload {
   /** Count of "Prepare / Stay Near Shelter" (category 14) alerts only */
   totalAlerts: number;
-  topCity: string;
   peakHour: string;
   byHour: HourBucket[];
   byHourStacked: HourStackedBucket[];
   categoriesInData: number[];
   byDay: DayBucket[];
-  topCities: CityBucket[];
   byCategory: CategoryBucket[];
   shelterByHour: ShelterHourBucket[];
   shelterByHourWeekday: ShelterHourBucket[];

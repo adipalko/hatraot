@@ -21,6 +21,30 @@ interface Props {
 
 const SHIFT_COLORS = ["#f59e0b", "#38bdf8", "#a78bfa", "#1e3a5f"];
 
+function ShiftBarTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: Array<{ payload?: ShelterShiftBucket; value?: number }>;
+}) {
+  if (!active || !payload?.length) return null;
+  const row = payload[0].payload;
+  if (!row) return null;
+  const avg = payload[0].value ?? row.avg;
+  return (
+    <div className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm shadow-xl">
+      <p className="mb-1 font-semibold text-foreground">{row.label}</p>
+      <p className="text-muted-foreground">
+        Avg. per day:{" "}
+        <span className="font-mono font-semibold text-accent-sky">
+          {formatNumber(Number(avg))}
+        </span>
+      </p>
+    </div>
+  );
+}
+
 export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Props) {
   if (!data || data.length === 0) return null;
 
@@ -61,7 +85,7 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 4, right: 4, bottom: 0, left: -16 }}
+            margin={{ top: 8, right: 4, bottom: 0, left: -16 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
@@ -76,17 +100,8 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
               tick={{ fontSize: 11 }}
             />
             <Tooltip
-              contentStyle={{
-                background: "#18181b",
-                border: "1px solid #3f3f46",
-                borderRadius: 8,
-                fontSize: 13,
-              }}
-              labelStyle={{ color: "#fafafa", fontWeight: 600 }}
-              formatter={(value) => [
-                formatNumber(Number(value)),
-                "Avg. Shelter Alerts",
-              ]}
+              content={<ShiftBarTooltip />}
+              cursor={{ fill: "rgba(63, 63, 70, 0.35)" }}
             />
             <Bar dataKey="avg" radius={[4, 4, 0, 0]}>
               {data.map((entry, i) => (

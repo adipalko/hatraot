@@ -1,6 +1,7 @@
 import type {
   Alert,
   CategoryBucket,
+  DailyShiftBucket,
   DashboardPayload,
   HourBucket,
   HourStackedBucket,
@@ -280,12 +281,38 @@ export function computePayload(
     }
   );
 
+  // Daily shelter alerts broken down by shift
+  const hourToShift = new Map<number, string>();
+  for (const s of SHELTER_SHIFTS) {
+    const key = s.label.startsWith("Morning") ? "morning"
+      : s.label.startsWith("Day") ? "day"
+      : s.label.startsWith("Evening") ? "evening"
+      : "night";
+    for (const h of s.hours) hourToShift.set(h, key);
+  }
+
+  const dailyShiftMap = new Map<string, { morning: number; day: number; evening: number; night: number }>();
+  for (const a of alerts) {
+    if (a.category !== 14) continue;
+    const h = parseInt(a.time.substring(0, 2), 10);
+    const shift = hourToShift.get(h) ?? "night";
+    if (!dailyShiftMap.has(a.date)) {
+      dailyShiftMap.set(a.date, { morning: 0, day: 0, evening: 0, night: 0 });
+    }
+    const entry = dailyShiftMap.get(a.date)!;
+    entry[shift as keyof typeof entry]++;
+  }
+
+  const shelterDailyShift: DailyShiftBucket[] = [...dailyShiftMap.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, counts]) => ({ date, ...counts }));
+
   const dates = alerts.map((a) => a.date);
   const dateMin = dates.length > 0 ? dates[dates.length - 1] : "";
   const dateMax = dates.length > 0 ? dates[0] : "";
 
   return {
-    totalAlerts: alerts.length,
+    totalAlerts: catMap.get(14) ?? 0,
     topCity: topCities.length > 0 ? topCities[0].city : "—",
     peakHour: `${String(peakIdx).padStart(2, "0")}:00`,
     byHour,
@@ -298,6 +325,7 @@ export function computePayload(
     shelterByHourWeekday,
     shelterByShift,
     shelterByShiftWeekday,
+    shelterDailyShift,
     allCities,
     filteredCategories,
     dateMin,

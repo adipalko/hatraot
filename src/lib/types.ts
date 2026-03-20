@@ -53,7 +53,16 @@ export const SHELTER_SHIFTS = [
   { label: "Night (21–06)", hours: [21, 22, 23, 0, 1, 2, 3, 4, 5] },
 ] as const;
 
+export interface DailyShiftBucket {
+  date: string;
+  morning: number;
+  day: number;
+  evening: number;
+  night: number;
+}
+
 export interface DashboardPayload {
+  /** Count of "Prepare / Stay Near Shelter" (category 14) alerts only */
   totalAlerts: number;
   topCity: string;
   peakHour: string;
@@ -67,6 +76,7 @@ export interface DashboardPayload {
   shelterByHourWeekday: ShelterHourBucket[];
   shelterByShift: ShelterShiftBucket[];
   shelterByShiftWeekday: ShelterShiftBucket[];
+  shelterDailyShift: DailyShiftBucket[];
   allCities: string[];
   /** Category counts reflecting city + date filters (but not category filter) */
   filteredCategories: CategoryBucket[];

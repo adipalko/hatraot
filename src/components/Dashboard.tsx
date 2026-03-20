@@ -5,13 +5,13 @@ import { Activity, MapPin, Clock, ShieldAlert, RefreshCw } from "lucide-react";
 import type { DashboardPayload } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
 import MetricCard from "./MetricCard";
-import AlertsByHourChart from "./AlertsByHourChart";
 import DailyTrendChart from "./DailyTrendChart";
 import TopCitiesChart from "./TopCitiesChart";
 import CityFilter from "./CityFilter";
 import CategoryFilter from "./CategoryFilter";
 import DateRangeFilter from "./DateRangeFilter";
 import ShelterByHourChart from "./ShelterByHourChart";
+import ShelterDailyTrendChart from "./ShelterDailyTrendChart";
 import AlertsTable from "./AlertsTable";
 
 interface Props {
@@ -153,7 +153,7 @@ export default function Dashboard({ initial }: Props) {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          label="Total Alerts"
+          label="Total Shelter Alerts"
           value={formatNumber(data.totalAlerts)}
           icon={Activity}
           accentClass="text-accent-amber"
@@ -173,20 +173,17 @@ export default function Dashboard({ initial }: Props) {
       </div>
 
       {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <AlertsByHourChart
-          data={data.byHourStacked}
-          categoriesInData={data.categoriesInData}
-        />
-        <DailyTrendChart data={data.byDay} />
-      </div>
+      <DailyTrendChart data={data.byDay} />
 
-      {/* Shelter Avg Chart */}
-      <ShelterByHourChart
-        data={shelterWeekday ? data.shelterByShiftWeekday : data.shelterByShift}
-        weekdayOnly={shelterWeekday}
-        onToggle={setShelterWeekday}
-      />
+      {/* Shelter Charts */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <ShelterByHourChart
+          data={shelterWeekday ? data.shelterByShiftWeekday : data.shelterByShift}
+          weekdayOnly={shelterWeekday}
+          onToggle={setShelterWeekday}
+        />
+        <ShelterDailyTrendChart data={data.shelterDailyShift} />
+      </div>
 
       {/* Charts Row 2 + Table */}
       <div className={`grid grid-cols-1 gap-6 ${selectedCities.length === 0 ? "lg:grid-cols-2" : ""}`}>

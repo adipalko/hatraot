@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import type { ShelterShiftBucket } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
+import { he } from "@/lib/i18n-he";
 
 interface Props {
   data: ShelterShiftBucket[];
@@ -36,7 +37,7 @@ function ShiftBarTooltip({
     <div className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm shadow-xl">
       <p className="mb-1 font-semibold text-foreground">{row.label}</p>
       <p className="text-muted-foreground">
-        Avg. per day:{" "}
+        {he.tooltipAvgPerDay}{" "}
         <span className="font-mono font-semibold text-accent-sky">
           {formatNumber(Number(avg))}
         </span>
@@ -58,13 +59,16 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-card-foreground">
-            Avg. Shelter Alerts per Shift
+            {he.chartShiftAvgTitle}
           </h3>
           <p className="text-xs text-muted-foreground">
-            Average daily &quot;Prepare / Stay Near Shelter&quot; alerts by shift
+            {he.chartShiftAvgSubtitle}
           </p>
         </div>
-        <label className="inline-flex cursor-pointer items-center gap-2 text-sm select-none">
+        <label
+          dir="ltr"
+          className="inline-flex cursor-pointer items-center gap-2 text-sm select-none"
+        >
           <input
             type="checkbox"
             checked={weekdayOnly}
@@ -78,10 +82,10 @@ export default function ShelterByHourChart({ data, weekdayOnly, onToggle }: Prop
               peer-checked:bg-accent-sky/30 peer-checked:after:translate-x-4
               peer-checked:after:bg-accent-sky"
           />
-          <span className="text-muted-foreground">Sun–Thu only</span>
+          <span className="text-muted-foreground">{he.shiftWeekdaysOnly}</span>
         </label>
       </div>
-      <div className="h-64" style={{ minWidth: 0, minHeight: 0 }}>
+      <div className="h-64 w-full min-w-0" dir="ltr" style={{ minHeight: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}

@@ -11,17 +11,31 @@ import {
   Legend,
 } from "recharts";
 import type { DailyShiftBucket } from "@/lib/types";
+import { he } from "@/lib/i18n-he";
 
 interface Props {
   data: DailyShiftBucket[];
 }
 
-const SHIFTS = [
-  { key: "morning" as const, label: "Morning (06–08)", color: "#f59e0b" },
-  { key: "day" as const, label: "Day (08–16)", color: "#38bdf8" },
-  { key: "evening" as const, label: "Evening (16–21)", color: "#a78bfa" },
-  { key: "night" as const, label: "Night (21–06)", color: "#1e6091" },
+const SHIFT_META = [
+  { key: "morning" as const, color: "#f59e0b" },
+  { key: "day" as const, color: "#38bdf8" },
+  { key: "evening" as const, color: "#a78bfa" },
+  { key: "night" as const, color: "#1e6091" },
 ];
+
+function shiftLegendLabel(key: (typeof SHIFT_META)[number]["key"]): string {
+  switch (key) {
+    case "morning":
+      return he.shiftMorning;
+    case "day":
+      return he.shiftDay;
+    case "evening":
+      return he.shiftEvening;
+    default:
+      return he.shiftNight;
+  }
+}
 
 function formatDateLabel(d: string) {
   const parts = d.split("-");
@@ -35,13 +49,13 @@ export default function ShelterDailyTrendChart({ data }: Props) {
     <div className="rounded-xl border border-border bg-card p-5 shadow-lg shadow-black/20">
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-card-foreground">
-          Daily Shelter Alerts by Shift
+          {he.chartDailyShiftTitle}
         </h3>
         <p className="text-xs text-muted-foreground">
-          &quot;Prepare / Stay Near Shelter&quot; alerts per day, broken down by shift
+          {he.chartDailyShiftSubtitle}
         </p>
       </div>
-      <div className="h-72" style={{ minWidth: 0, minHeight: 0 }}>
+      <div className="h-72 w-full min-w-0" dir="ltr" style={{ minHeight: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
@@ -72,11 +86,11 @@ export default function ShelterDailyTrendChart({ data }: Props) {
               labelFormatter={(label) => formatDateLabel(String(label))}
             />
             <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-            {SHIFTS.map((s) => (
+            {SHIFT_META.map((s) => (
               <Bar
                 key={s.key}
                 dataKey={s.key}
-                name={s.label}
+                name={shiftLegendLabel(s.key)}
                 stackId="1"
                 fill={s.color}
               />

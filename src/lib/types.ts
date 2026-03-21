@@ -42,10 +42,10 @@ export interface ShelterShiftBucket {
 }
 
 export const SHELTER_SHIFTS = [
-  { label: "Morning (06–08)", hours: [6, 7] },
-  { label: "Day (08–16)", hours: [8, 9, 10, 11, 12, 13, 14, 15] },
-  { label: "Evening (16–21)", hours: [16, 17, 18, 19, 20] },
-  { label: "Night (21–06)", hours: [21, 22, 23, 0, 1, 2, 3, 4, 5] },
+  { label: "בוקר (06–08)", hours: [6, 7] },
+  { label: "יום (08–16)", hours: [8, 9, 10, 11, 12, 13, 14, 15] },
+  { label: "ערב (16–21)", hours: [16, 17, 18, 19, 20] },
+  { label: "לילה (21–06)", hours: [21, 22, 23, 0, 1, 2, 3, 4, 5] },
 ] as const;
 
 export interface DailyShiftBucket {
@@ -57,14 +57,16 @@ export interface DailyShiftBucket {
 }
 
 export interface DashboardPayload {
-  /** Count of "Prepare / Stay Near Shelter" (category 14) alerts only */
+  /** Count of category 14 (התרעה מקדימה) only */
   totalAlerts: number;
   peakHour: string;
   byHour: HourBucket[];
   byHourStacked: HourStackedBucket[];
   categoriesInData: number[];
-  /** Per-day counts for category 14 only (daily trend chart) */
+  /** Per-day counts for category 14 — daily trend chart */
   byDay: DayBucket[];
+  /** Per-day counts for category 1 (רקטות וטילים) — daily trend chart */
+  byDayRockets: DayBucket[];
   byCategory: CategoryBucket[];
   shelterByHour: ShelterHourBucket[];
   shelterByHourWeekday: ShelterHourBucket[];
@@ -80,15 +82,15 @@ export interface DashboardPayload {
 }
 
 const CATEGORY_LABELS: Record<number, string> = {
-  1: "Rockets & Missiles",
-  2: "Hostile Aircraft",
-  7: "Earthquake",
-  10: "Terrorist Infiltration",
-  14: "Prepare / Stay Near Shelter",
+  1: "רקטות וטילים",
+  2: "כלי טיס עוין",
+  7: "רעידת אדמה",
+  10: "חדירה טרוריסטית",
+  14: "התרעה מקדימה",
 };
 
 export function categoryLabel(cat: number): string {
-  return CATEGORY_LABELS[cat] ?? `Category ${cat}`;
+  return CATEGORY_LABELS[cat] ?? `קטגוריה ${cat}`;
 }
 
 export const CATEGORY_CHART_COLORS: Record<number, string> = {
@@ -105,4 +107,20 @@ export function categoryChartColor(cat: number): string {
 
 export function formatNumber(n: number): string {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+/** טולטיפים: אלפים על החלק השלם בלבד */
+export function formatTooltipNumber(n: number, fractionDigits = 1): string {
+  if (!Number.isFinite(n)) return "—";
+  const rounded =
+    fractionDigits <= 0
+      ? Math.round(n)
+      : Math.round(n * 10 ** fractionDigits) / 10 ** fractionDigits;
+  const s = rounded.toString();
+  if (!s.includes(".")) {
+    return formatNumber(Math.round(rounded));
+  }
+  const [intRaw, frac] = s.split(".");
+  const intPart = intRaw!.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return `${intPart}.${frac}`;
 }

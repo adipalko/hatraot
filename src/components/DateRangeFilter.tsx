@@ -4,6 +4,7 @@ import { useRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Calendar, X } from "lucide-react";
+import { he } from "@/lib/i18n-he";
 
 interface Props {
   dateMin: string;
@@ -53,13 +54,13 @@ export default function DateRangeFilter({
         endDate={toDate(to)}
         minDate={toDate(dateMin)}
         maxDate={toDate(to) || toDate(dateMax)}
-        placeholderText="From"
+        placeholderText={he.dateFrom}
         dateFormat="dd/MM/yyyy"
         className="w-[120px] rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground transition focus:outline-none focus:ring-2 focus:ring-accent-amber/30"
         calendarClassName="dark-calendar"
         showPopperArrow={false}
       />
-      <span className="text-sm text-muted-foreground">to</span>
+      <span className="text-sm text-muted-foreground">{he.dateRangeTo}</span>
       <DatePicker
         ref={toRef}
         selected={toDate(to)}
@@ -69,7 +70,7 @@ export default function DateRangeFilter({
         endDate={toDate(to)}
         minDate={toDate(from) || toDate(dateMin)}
         maxDate={toDate(dateMax)}
-        placeholderText="To"
+        placeholderText={he.dateTo}
         dateFormat="dd/MM/yyyy"
         className="w-[120px] rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground transition focus:outline-none focus:ring-2 focus:ring-accent-amber/30"
         calendarClassName="dark-calendar"

@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
+import { he } from "@/lib/i18n-he";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const rubik = Rubik({
+  subsets: ["latin", "hebrew"],
+  variable: "--font-rubik",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Pikud HaOref Alert Dashboard",
-  description:
-    "Real-time analytics dashboard for Israel Home Front Command historical alert data",
+  title: he.metaTitle,
+  description: he.metaDescription,
 };
 
 export default function RootLayout({
@@ -24,12 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="he"
-      dir="ltr"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-      <body className="min-h-screen bg-background text-foreground">
+    <html lang="he" dir="ltr" className={`${rubik.variable} antialiased`}>
+      <body className="min-h-screen bg-background font-sans text-foreground">
         {children}
       </body>
     </html>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X, ChevronDown } from "lucide-react";
+import { he } from "@/lib/i18n-he";
 
 interface Props {
   cities: string[];
@@ -46,10 +47,12 @@ export default function CityFilter({ cities, selected, onChange }: Props) {
         className="flex w-full items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm transition hover:border-accent-amber/50 focus:outline-none focus:ring-2 focus:ring-accent-amber/30"
       >
         <Search className="h-4 w-4 text-muted-foreground" />
-        <span className="flex-1 text-left text-muted-foreground">
+        <span className="flex-1 text-start text-muted-foreground">
           {selected.length === 0
-            ? "Filter by city…"
-            : `${selected.length} ${selected.length === 1 ? "city" : "cities"} selected`}
+            ? he.cityFilterPlaceholder
+            : selected.length === 1
+              ? he.cityOneSelected
+              : he.cityManySelected(selected.length)}
         </span>
         <ChevronDown
           className={`h-4 w-4 text-muted-foreground transition ${open ? "rotate-180" : ""}`}
@@ -76,7 +79,7 @@ export default function CityFilter({ cities, selected, onChange }: Props) {
             onClick={() => onChange([])}
             className="text-xs text-muted-foreground hover:text-accent-red transition"
           >
-            Clear all
+            {he.clearAll}
           </button>
         </div>
       )}
@@ -88,7 +91,7 @@ export default function CityFilter({ cities, selected, onChange }: Props) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search cities…"
+              placeholder={he.searchCities}
               className="w-full rounded-md bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
               autoFocus
             />
@@ -96,7 +99,7 @@ export default function CityFilter({ cities, selected, onChange }: Props) {
           <ul className="max-h-60 overflow-y-auto p-1">
             {filtered.length === 0 && (
               <li className="px-3 py-2 text-sm text-muted-foreground">
-                No cities found
+                {he.noCitiesFound}
               </li>
             )}
             {filtered.slice(0, 100).map((city) => {

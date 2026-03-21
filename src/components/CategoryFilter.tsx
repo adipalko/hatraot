@@ -2,6 +2,7 @@
 
 import type { CategoryBucket } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
+import { he } from "@/lib/i18n-he";
 
 interface Props {
   categories: CategoryBucket[];
@@ -64,7 +65,7 @@ export default function CategoryFilter({
           onClick={() => onChange([])}
           className="text-xs text-muted-foreground hover:text-accent-red transition px-2"
         >
-          Clear
+          {he.categoryClear}
         </button>
       )}
     </div>

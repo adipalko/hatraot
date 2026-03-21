@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { DashboardPayload } from "@/lib/types";
 import { formatNumber } from "@/lib/types";
+import { he } from "@/lib/i18n-he";
 import MetricCard from "./MetricCard";
 import DailyTrendChart from "./DailyTrendChart";
 import CityFilter from "./CityFilter";
@@ -74,10 +75,17 @@ export default function Dashboard({ initial }: Props) {
     fetchFiltered(selectedCities, selectedCategories, dateFrom, dateTo);
   }, [selectedCities, selectedCategories, dateFrom, dateTo, fetchFiltered]);
 
-  const dateRange =
-    data.byDay.length > 0
-      ? `${data.byDay[0].date} — ${data.byDay[data.byDay.length - 1].date}`
-      : "";
+  const dateRange = (() => {
+    const dates = [
+      ...new Set([
+        ...(data.byDay ?? []).map((d) => d.date),
+        ...(data.byDayRockets ?? []).map((d) => d.date),
+      ]),
+    ];
+    if (dates.length === 0) return "";
+    dates.sort();
+    return `${dates[0]} — ${dates[dates.length - 1]}`;
+  })();
 
   const hasFilters =
     selectedCities.length > 0 ||
@@ -89,7 +97,7 @@ export default function Dashboard({ initial }: Props) {
     data.byCategory.find((c) => c.category === 1)?.count ?? 0;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
+    <div dir="rtl" className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
@@ -97,12 +105,12 @@ export default function Dashboard({ initial }: Props) {
             <ShieldAlert className="h-6 w-6 text-accent-amber" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Pikud HaOref Alert Dashboard
+            {he.dashboardTitle}
           </h1>
         </div>
-        <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+        <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span>
-            Live data from{" "}
+            {he.liveDataFrom}
             <a
               href="https://github.com/dleshem/israel-alerts-data"
               target="_blank"
@@ -153,7 +161,7 @@ export default function Dashboard({ initial }: Props) {
             }}
             className="text-xs text-muted-foreground hover:text-accent-red transition"
           >
-            Clear all filters
+            {he.clearAllFilters}
           </button>
         )}
       </div>
@@ -161,19 +169,19 @@ export default function Dashboard({ initial }: Props) {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          label="Prepare / Stay Near Shelter"
+          label={he.metricShelter}
           value={formatNumber(data.totalAlerts)}
           icon={Activity}
           accentClass="text-sky-400"
         />
         <MetricCard
-          label="Rockets & Missiles"
+          label={he.metricRockets}
           value={formatNumber(rocketsCount)}
           icon={Rocket}
           accentClass="text-accent-red"
         />
         <MetricCard
-          label="Peak Alert Hour"
+          label={he.metricPeakHour}
           value={data.peakHour}
           icon={Clock}
           accentClass="text-accent-emerald"
@@ -181,19 +189,24 @@ export default function Dashboard({ initial }: Props) {
       </div>
 
       {/* Charts Row 1 */}
-      <DailyTrendChart data={data.byDay} />
+      <DailyTrendChart
+        shelterByDay={data.byDay ?? []}
+        rocketsByDay={data.byDayRockets ?? []}
+      />
 
       {/* Shelter Charts */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ShelterByHourChart
-          data={shelterWeekday ? data.shelterByShiftWeekday : data.shelterByShift}
+          data={
+            shelterWeekday ? data.shelterByShiftWeekday : data.shelterByShift
+          }
           weekdayOnly={shelterWeekday}
           onToggle={setShelterWeekday}
         />
-        <ShelterDailyTrendChart data={data.shelterDailyShift} />
+        <ShelterDailyTrendChart data={data.shelterDailyShift ?? []} />
       </div>
 
-      <AlertsTable alerts={data.recentAlerts} />
+      <AlertsTable alerts={data.recentAlerts ?? []} />
     </div>
   );
 }

@@ -154,8 +154,10 @@ export function computePayload(
   const hourCounts = new Array(24).fill(0);
   const cityMap = new Map<string, number>();
   const dayMap = new Map<string, number>();
-  /** Daily counts for category 14 only — used for the daily trend chart */
+  /** Daily counts for category 14 — daily trend chart */
   const shelterDayMap = new Map<string, number>();
+  /** Daily counts for category 1 (רקטות וטילים) — daily trend chart */
+  const rocketsDayMap = new Map<string, number>();
   const catMap = new Map<number, number>();
 
   // hour -> category -> count
@@ -170,6 +172,12 @@ export function computePayload(
       shelterDayMap.set(
         a.date,
         (shelterDayMap.get(a.date) || 0) + 1
+      );
+    }
+    if (a.category === 1) {
+      rocketsDayMap.set(
+        a.date,
+        (rocketsDayMap.get(a.date) || 0) + 1
       );
     }
     catMap.set(a.category, (catMap.get(a.category) || 0) + 1);
@@ -221,6 +229,10 @@ export function computePayload(
   const filteredCategories = opts?.filteredCategories ?? byCategory;
 
   const byDay = [...shelterDayMap.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, count]) => ({ date, count }));
+
+  const byDayRockets = [...rocketsDayMap.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([date, count]) => ({ date, count }));
 
@@ -285,21 +297,19 @@ export function computePayload(
     }
   );
 
-  // Daily shelter alerts broken down by shift
-  const hourToShift = new Map<number, string>();
-  for (const s of SHELTER_SHIFTS) {
-    const key = s.label.startsWith("Morning") ? "morning"
-      : s.label.startsWith("Day") ? "day"
-      : s.label.startsWith("Evening") ? "evening"
-      : "night";
+  // Daily shelter alerts broken down by shift (index matches DailyShiftBucket keys)
+  const SHIFT_KEYS = ["morning", "day", "evening", "night"] as const;
+  const hourToShift = new Map<number, (typeof SHIFT_KEYS)[number]>();
+  SHELTER_SHIFTS.forEach((s, idx) => {
+    const key = SHIFT_KEYS[idx];
     for (const h of s.hours) hourToShift.set(h, key);
-  }
+  });
 
   const dailyShiftMap = new Map<string, { morning: number; day: number; evening: number; night: number }>();
   for (const a of alerts) {
     if (a.category !== 14) continue;
     const h = parseInt(a.time.substring(0, 2), 10);
-    const shift = hourToShift.get(h) ?? "night";
+    const shift = hourToShift.get(h) ?? ("night" as const);
     if (!dailyShiftMap.has(a.date)) {
       dailyShiftMap.set(a.date, { morning: 0, day: 0, evening: 0, night: 0 });
     }
@@ -322,6 +332,7 @@ export function computePayload(
     byHourStacked,
     categoriesInData,
     byDay,
+    byDayRockets,
     byCategory,
     shelterByHour,
     shelterByHourWeekday,

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import type { Alert } from "@/lib/types";
 import { categoryLabel } from "@/lib/types";
+import { he } from "@/lib/i18n-he";
 
 type SortKey = "city" | "date" | "time" | "category";
 type SortDir = "asc" | "desc";
@@ -64,18 +65,18 @@ export default function AlertsTable({ alerts }: Props) {
   return (
     <div className="rounded-xl border border-border bg-card shadow-lg shadow-black/20 overflow-hidden">
       <h3 className="px-5 pt-5 pb-3 text-lg font-semibold text-card-foreground">
-        Recent Alerts
+        {he.tableTitle}
       </h3>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
+            <tr className="border-b border-border bg-muted/50 text-start text-xs uppercase tracking-wider text-muted-foreground">
               <th className="px-4 py-3">
                 <button
                   onClick={() => toggleSort("city")}
                   className="inline-flex items-center gap-1 hover:text-foreground transition"
                 >
-                  City <SortIcon col="city" />
+                  {he.colCity} <SortIcon col="city" />
                 </button>
               </th>
               <th className="px-4 py-3">
@@ -83,7 +84,7 @@ export default function AlertsTable({ alerts }: Props) {
                   onClick={() => toggleSort("category")}
                   className="inline-flex items-center gap-1 hover:text-foreground transition"
                 >
-                  Type <SortIcon col="category" />
+                  {he.colType} <SortIcon col="category" />
                 </button>
               </th>
               <th className="px-4 py-3">
@@ -91,7 +92,7 @@ export default function AlertsTable({ alerts }: Props) {
                   onClick={() => toggleSort("date")}
                   className="inline-flex items-center gap-1 hover:text-foreground transition"
                 >
-                  Date <SortIcon col="date" />
+                  {he.colDate} <SortIcon col="date" />
                 </button>
               </th>
               <th className="px-4 py-3">
@@ -99,7 +100,7 @@ export default function AlertsTable({ alerts }: Props) {
                   onClick={() => toggleSort("time")}
                   className="inline-flex items-center gap-1 hover:text-foreground transition"
                 >
-                  Time <SortIcon col="time" />
+                  {he.colTime} <SortIcon col="time" />
                 </button>
               </th>
             </tr>
@@ -135,7 +136,7 @@ export default function AlertsTable({ alerts }: Props) {
                   colSpan={4}
                   className="px-5 py-8 text-center text-muted-foreground"
                 >
-                  No alerts found
+                  {he.noAlertsFound}
                 </td>
               </tr>
             )}

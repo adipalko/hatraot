@@ -18,6 +18,7 @@ import CategoryFilter from "./CategoryFilter";
 import DateRangeFilter from "./DateRangeFilter";
 import ShelterByHourChart from "./ShelterByHourChart";
 import ShelterDailyTrendChart from "./ShelterDailyTrendChart";
+import ShelterShiftTrendChart from "./ShelterShiftTrendChart";
 import AlertsTable from "./AlertsTable";
 
 interface Props {
@@ -205,6 +206,8 @@ export default function Dashboard({ initial }: Props) {
         />
         <ShelterDailyTrendChart data={data.shelterDailyShift ?? []} />
       </div>
+
+      <ShelterShiftTrendChart data={data.shelterDailyShift ?? []} />
 
       <AlertsTable alerts={data.recentAlerts ?? []} />
     </div>

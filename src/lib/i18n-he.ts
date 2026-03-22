@@ -55,4 +55,9 @@ export const he = {
   shiftDay: "יום (08–16)",
   shiftEvening: "ערב (16–21)",
   shiftNight: "לילה (21–06)",
+
+  shiftTrendTitle: "מגמה יומית לפי חלון שעות",
+  shiftTrendSubtitle: "בחרו חלון שעות לצפייה במגמה היומית של התרעות מקדימה עבור אותו חלון בלבד",
+  shiftTrendPickerLabel: "חלון שעות:",
+  shiftTrendCount: "התרעות",
 } as const;

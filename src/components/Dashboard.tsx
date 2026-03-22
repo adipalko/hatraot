@@ -168,29 +168,27 @@ export default function Dashboard({ initial }: Props) {
         )}
       </div>
 
-      {/* Metrics Row — shown only when at least one city is filtered */}
-      {selectedCities.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <MetricCard
-            label={he.metricShelter}
-            value={formatNumber(data.totalAlerts)}
-            icon={Activity}
-            accentClass="text-sky-400"
-          />
-          <MetricCard
-            label={he.metricRockets}
-            value={formatNumber(rocketsCount)}
-            icon={Rocket}
-            accentClass="text-accent-red"
-          />
-          <MetricCard
-            label={he.metricPeakHour}
-            value={data.peakHour}
-            icon={Clock}
-            accentClass="text-accent-emerald"
-          />
-        </div>
-      )}
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          label={he.metricShelter}
+          value={formatNumber(data.totalAlerts)}
+          icon={Activity}
+          accentClass="text-sky-400"
+        />
+        <MetricCard
+          label={he.metricRockets}
+          value={formatNumber(rocketsCount)}
+          icon={Rocket}
+          accentClass="text-accent-red"
+        />
+        <MetricCard
+          label={he.metricPeakHour}
+          value={data.peakHour}
+          icon={Clock}
+          accentClass="text-accent-emerald"
+        />
+      </div>
 
       {/* Charts Row 1 */}
       <DailyTrendChart

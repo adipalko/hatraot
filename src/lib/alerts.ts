@@ -152,12 +152,17 @@ export function computePayload(
     filteredCategories?: CategoryBucket[];
   }
 ): DashboardPayload {
-  // Deduplicate by (date, time, category): one event may alert many cities
-  // simultaneously, each as a separate row. We count events, not city-rows.
+  // Deduplicate alerts into unique events:
+  // - Rockets (cat 1): 15-minute bucket — a salvo can span many minutes as
+  //   alerts propagate to distant cities.
+  // - All other categories: 2-minute bucket — alerts cluster more tightly.
   const seenEvents = new Set<string>();
   const uniqueAlerts: Alert[] = [];
   for (const a of alerts) {
-    const key = `${a.date}|${a.time}|${a.category}`;
+    const mm = parseInt(a.time.substring(3, 5), 10);
+    const windowMinutes = a.category === 1 ? 15 : a.category === 14 ? 1 : 2;
+    const bucket = Math.floor(mm / windowMinutes);
+    const key = `${a.date}|${a.time.substring(0, 2)}:${bucket}|${a.category}`;
     if (!seenEvents.has(key)) {
       seenEvents.add(key);
       uniqueAlerts.push(a);

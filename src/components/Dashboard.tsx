@@ -207,7 +207,10 @@ export default function Dashboard({ initial }: Props) {
         <ShelterDailyTrendChart data={data.shelterDailyShift ?? []} />
       </div>
 
-      <ShelterShiftTrendChart data={data.shelterDailyShift ?? []} />
+      <ShelterShiftTrendChart
+        shiftData={data.shelterDailyShift ?? []}
+        hourData={data.shelterDailyByHour ?? []}
+      />
 
       <AlertsTable alerts={data.recentAlerts ?? []} />
     </div>

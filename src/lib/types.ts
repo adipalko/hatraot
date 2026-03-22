@@ -56,6 +56,12 @@ export interface DailyShiftBucket {
   night: number;
 }
 
+/** Per-day hourly breakdown for category 14 (24 counts, index = hour) */
+export interface ShelterDailyHourBucket {
+  date: string;
+  byHour: number[]; // length 24, index = hour 0–23
+}
+
 export interface DashboardPayload {
   /** Count of category 14 (התרעה מקדימה) only */
   totalAlerts: number;
@@ -73,6 +79,8 @@ export interface DashboardPayload {
   shelterByShift: ShelterShiftBucket[];
   shelterByShiftWeekday: ShelterShiftBucket[];
   shelterDailyShift: DailyShiftBucket[];
+  /** Per-day hourly counts for cat 14 — used for custom time window chart */
+  shelterDailyByHour: ShelterDailyHourBucket[];
   allCities: string[];
   /** Category counts reflecting city + date filters (but not category filter) */
   filteredCategories: CategoryBucket[];

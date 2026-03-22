@@ -5,6 +5,7 @@ import type {
   DashboardPayload,
   HourBucket,
   HourStackedBucket,
+  ShelterDailyHourBucket,
   ShelterHourBucket,
   ShelterShiftBucket,
 } from "./types";
@@ -321,6 +322,20 @@ export function computePayload(
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([date, counts]) => ({ date, ...counts }));
 
+  // Per-day hourly breakdown for cat 14 (for custom time window chart)
+  const dailyHourMap = new Map<string, number[]>();
+  for (const a of alerts) {
+    if (a.category !== 14) continue;
+    const h = parseInt(a.time.substring(0, 2), 10);
+    if (!dailyHourMap.has(a.date)) {
+      dailyHourMap.set(a.date, new Array(24).fill(0));
+    }
+    dailyHourMap.get(a.date)![h]++;
+  }
+  const shelterDailyByHour: ShelterDailyHourBucket[] = [...dailyHourMap.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, byHour]) => ({ date, byHour }));
+
   const dates = alerts.map((a) => a.date);
   const dateMin = dates.length > 0 ? dates[dates.length - 1] : "";
   const dateMax = dates.length > 0 ? dates[0] : "";
@@ -339,6 +354,7 @@ export function computePayload(
     shelterByShift,
     shelterByShiftWeekday,
     shelterDailyShift,
+    shelterDailyByHour,
     allCities,
     filteredCategories,
     dateMin,

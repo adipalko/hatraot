@@ -8,6 +8,7 @@ interface Props {
   categories: CategoryBucket[];
   selected: number[];
   onChange: (categories: number[]) => void;
+  showCounts?: boolean;
 }
 
 const CATEGORY_COLORS: Record<number, string> = {
@@ -26,6 +27,7 @@ export default function CategoryFilter({
   categories,
   selected,
   onChange,
+  showCounts = false,
 }: Props) {
   const toggle = (cat: number) => {
     onChange(
@@ -54,9 +56,11 @@ export default function CategoryFilter({
             }`}
           >
             <span>{c.label}</span>
-            <span className="font-mono opacity-70">
-              {formatNumber(c.count)}
-            </span>
+            {showCounts && (
+              <span className="font-mono opacity-70">
+                {formatNumber(c.count)}
+              </span>
+            )}
           </button>
         );
       })}

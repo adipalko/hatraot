@@ -151,6 +151,7 @@ export default function Dashboard({ initial }: Props) {
           categories={data.filteredCategories}
           selected={selectedCategories}
           onChange={setSelectedCategories}
+          showCounts={selectedCities.length > 0}
         />
         {hasFilters && (
           <button

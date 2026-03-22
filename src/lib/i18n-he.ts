@@ -41,15 +41,15 @@ export const he = {
   chartSirensLine: "רקטות וטילים",
   chartTrendShort: "מגמה",
 
-  chartShiftAvgTitle: "ממוצע התרעות מקדימות לפי משמרת",
+  chartShiftAvgTitle: "ממוצע התרעות מקדימות לפי חלון שעות",
   chartShiftAvgSubtitle:
-    "ממוצע יומי של התרעות ״התרעה מקדימה״ לפי משמרות היום (בוקר, יום, ערב, לילה)",
+    "ממוצע יומי של התרעות ״התרעה מקדימה״ לפי חלוני שעות (בוקר, יום, ערב, לילה)",
   shiftWeekdaysOnly: "א׳–ה׳ בלבד",
   tooltipAvgPerDay: "ממוצע ליום:",
 
-  chartDailyShiftTitle: "התרעות מקדימות יומיות לפי משמרת",
+  chartDailyShiftTitle: "התרעות מקדימות יומיות לפי חלון שעות",
   chartDailyShiftSubtitle:
-    "התרעות ״התרעה מקדימה״ ליום, מפורטות לפי משמרת",
+    "התרעות ״התרעה מקדימה״ ליום, מפורטות לפי חלון שעות",
 
   shiftMorning: "בוקר (06–08)",
   shiftDay: "יום (08–16)",

@@ -152,6 +152,18 @@ export function computePayload(
     filteredCategories?: CategoryBucket[];
   }
 ): DashboardPayload {
+  // Deduplicate by (date, time, category): one event may alert many cities
+  // simultaneously, each as a separate row. We count events, not city-rows.
+  const seenEvents = new Set<string>();
+  const uniqueAlerts: Alert[] = [];
+  for (const a of alerts) {
+    const key = `${a.date}|${a.time}|${a.category}`;
+    if (!seenEvents.has(key)) {
+      seenEvents.add(key);
+      uniqueAlerts.push(a);
+    }
+  }
+
   const hourCounts = new Array(24).fill(0);
   const cityMap = new Map<string, number>();
   const dayMap = new Map<string, number>();
@@ -164,10 +176,15 @@ export function computePayload(
   // hour -> category -> count
   const hourCatMap: Map<number, Map<number, number>> = new Map();
 
+  // City map uses original alerts (all city-rows) so we know which cities were alerted
   for (const a of alerts) {
+    cityMap.set(a.city, (cityMap.get(a.city) || 0) + 1);
+  }
+
+  // All other metrics use deduplicated events
+  for (const a of uniqueAlerts) {
     const h = parseInt(a.time.substring(0, 2), 10);
     hourCounts[h]++;
-    cityMap.set(a.city, (cityMap.get(a.city) || 0) + 1);
     dayMap.set(a.date, (dayMap.get(a.date) || 0) + 1);
     if (a.category === 14) {
       shelterDayMap.set(
@@ -253,7 +270,7 @@ export function computePayload(
   }
   const numWeekdays = weekdayDates.size || 1;
 
-  for (const a of alerts) {
+  for (const a of uniqueAlerts) {
     if (a.category !== 14) continue;
     const h = parseInt(a.time.substring(0, 2), 10);
     shelterHourTotals[h]++;
@@ -307,7 +324,7 @@ export function computePayload(
   });
 
   const dailyShiftMap = new Map<string, { morning: number; day: number; evening: number; night: number }>();
-  for (const a of alerts) {
+  for (const a of uniqueAlerts) {
     if (a.category !== 14) continue;
     const h = parseInt(a.time.substring(0, 2), 10);
     const shift = hourToShift.get(h) ?? ("night" as const);
@@ -324,7 +341,7 @@ export function computePayload(
 
   // Per-day hourly breakdown for cat 14 (for custom time window chart)
   const dailyHourMap = new Map<string, number[]>();
-  for (const a of alerts) {
+  for (const a of uniqueAlerts) {
     if (a.category !== 14) continue;
     const h = parseInt(a.time.substring(0, 2), 10);
     if (!dailyHourMap.has(a.date)) {

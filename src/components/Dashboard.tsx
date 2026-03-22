@@ -109,25 +109,9 @@ export default function Dashboard({ initial }: Props) {
             {he.dashboardTitle}
           </h1>
         </div>
-        <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          <span>
-            {he.liveDataFrom}
-            <a
-              href="https://github.com/dleshem/israel-alerts-data"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline decoration-border hover:text-accent-amber transition"
-            >
-              dleshem/israel-alerts-data
-            </a>
-          </span>
-          {dateRange && (
-            <span className="text-muted-foreground/70">· {dateRange}</span>
-          )}
-          {loading && (
-            <RefreshCw className="h-3.5 w-3.5 animate-spin text-accent-amber" />
-          )}
-        </p>
+        {loading && (
+          <RefreshCw className="mt-1 h-3.5 w-3.5 animate-spin text-accent-amber" />
+        )}
       </div>
 
       {/* Filters */}
@@ -214,6 +198,24 @@ export default function Dashboard({ initial }: Props) {
       />
 
       <AlertsTable alerts={data.recentAlerts ?? []} />
+
+      {/* Footer */}
+      <footer className="flex flex-wrap items-center justify-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+        <span>
+          {he.liveDataFrom}
+          <a
+            href="https://github.com/dleshem/israel-alerts-data"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-border hover:text-accent-amber transition"
+          >
+            dleshem/israel-alerts-data
+          </a>
+        </span>
+        {dateRange && (
+          <span className="text-muted-foreground/70">· {dateRange}</span>
+        )}
+      </footer>
     </div>
   );
 }

@@ -26,16 +26,25 @@ export async function GET(req: NextRequest) {
   );
 
   // Category counts from city + date filtered set (excludes category filter)
-  // so the category buttons reflect what's available in the current city/date selection
+  // so the category buttons reflect what's available in the current city/date selection.
+  // Uses the same time-window deduplication as computePayload so counts match the metrics.
   const cityDateFiltered = filterAlerts(allAlerts, {
     cities: citiesParam ? citiesParam.split("|") : undefined,
     dateFrom: dateFrom ?? undefined,
     dateTo: dateTo ?? undefined,
   });
 
+  const seenForCat = new Set<string>();
   const catCount = new Map<number, number>();
   for (const a of cityDateFiltered) {
-    catCount.set(a.category, (catCount.get(a.category) || 0) + 1);
+    const mm = parseInt(a.time.substring(3, 5), 10);
+    const windowMinutes = a.category === 1 ? 15 : a.category === 14 ? 1 : 2;
+    const bucket = Math.floor(mm / windowMinutes);
+    const key = `${a.date}|${a.time.substring(0, 2)}:${bucket}|${a.category}`;
+    if (!seenForCat.has(key)) {
+      seenForCat.add(key);
+      catCount.set(a.category, (catCount.get(a.category) || 0) + 1);
+    }
   }
   const filteredCategories: CategoryBucket[] = [...catCount.entries()]
     .sort((a, b) => b[1] - a[1])

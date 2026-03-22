@@ -6,12 +6,12 @@ export const he = {
   metaDescription:
     "ניתוח נתוני התרעות היסטוריות — מקור: מאגר israel-alerts-data",
 
-  dashboardTitle: "לוח בקרת התרעות פיקוד העורף",
+  dashboardTitle: "לוח בקרת התרעות פיקוד העורף - שאגת הארי",
   liveDataFrom: "נתונים חיים מ־",
   clearAllFilters: "ניקוי כל המסננים",
 
   metricShelter: "התרעה מקדימה",
-  metricRockets: "רקטות וטילים",
+  metricRockets: "אזעקות",
   metricPeakHour: "שעת שיא להתרעות",
 
   cityFilterPlaceholder: "סינון לפי יישוב…",
@@ -34,16 +34,16 @@ export const he = {
   colTime: "שעה",
   noAlertsFound: "לא נמצאו התרעות",
 
-  chartDailyShelterTitle: "מגמת התרעות מקדימות יומית",
+  chartDailyShelterTitle: "מגמה יומית",
   chartDailyShelterSubtitle:
-    "אזור כחול: התרעות מקדימה (קטגוריה 14). קו אדום: רקטות וטילים (קטגוריה 1). קו מקווקו ענבר: מגמה ליניארית על ההתרעות המקדימות (ללא היום הנוכחי, שעון ישראל).",
+    "אזור כחול: התרעות מקדימות. קו אדום: אזעקות. קו מקווקו ענבר: מגמה ליניארית ללא היום הנוכחי.",
   chartShelterAlerts: "התרעות מקדימות",
-  chartSirensLine: "רקטות וטילים",
+  chartSirensLine: "אזעקות",
   chartTrendShort: "מגמה",
 
   chartShiftAvgTitle: "ממוצע התרעות מקדימות לפי חלון שעות",
   chartShiftAvgSubtitle:
-    "ממוצע יומי של התרעות ״התרעה מקדימה״ לפי חלוני שעות (בוקר, יום, ערב, לילה)",
+    "ממוצע יומי של התרעות מקדימות לפי חלון שעות",
   shiftWeekdaysOnly: "א׳–ה׳ בלבד",
   tooltipAvgPerDay: "ממוצע ליום:",
 

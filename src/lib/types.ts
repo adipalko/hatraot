@@ -90,10 +90,10 @@ export interface DashboardPayload {
 }
 
 const CATEGORY_LABELS: Record<number, string> = {
-  1: "רקטות וטילים",
+  1: "אזעקות",
   2: "כלי טיס עוין",
   7: "רעידת אדמה",
-  10: "חדירה טרוריסטית",
+  10: "חדירה",
   14: "התרעה מקדימה",
 };
 

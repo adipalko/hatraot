@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import {
   ComposedChart,
   Area,
@@ -367,9 +367,8 @@ export default function ShelterShiftTrendChart({ shiftData, hourData }: Props) {
               formatter={(value) => String(value)}
             />
             {activeSeries.map((s) => (
-              <>
+              <Fragment key={s.dataKey}>
                 <Area
-                  key={`area_${s.dataKey}`}
                   type="monotone"
                   dataKey={s.dataKey}
                   name={s.label}
@@ -379,7 +378,6 @@ export default function ShelterShiftTrendChart({ shiftData, hourData }: Props) {
                   fillOpacity={activeSeries.length > 1 ? 0.6 : 1}
                 />
                 <Line
-                  key={`trend_${s.dataKey}`}
                   type="linear"
                   dataKey={s.trendKey}
                   stroke={s.color}
@@ -390,7 +388,7 @@ export default function ShelterShiftTrendChart({ shiftData, hourData }: Props) {
                   connectNulls={false}
                   legendType="none"
                 />
-              </>
+              </Fragment>
             ))}
           </ComposedChart>
         </ResponsiveContainer>
